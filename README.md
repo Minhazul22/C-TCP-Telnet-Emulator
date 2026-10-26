@@ -7,7 +7,7 @@ A small educational TCP server written in C for Linux. The lab exercise implemen
 ## Features
 
 - TCP server using POSIX sockets
-- Configurable-at-source listening port (the lab version uses port `14055`)
+- Lab listening port: `14055`
 - Multiple client connections managed with `select()`
 - Simple username/password prompt and per-client session state
 - Command prompt with an `exit` command; other commands return `unknown command`
@@ -15,20 +15,22 @@ A small educational TCP server written in C for Linux. The lab exercise implemen
 
 ## Architecture
 
-The server creates a TCP listening socket, binds to its port, starts listening, and uses `select()` to monitor the listening socket and connected clients. When a new client connects, it is added to the monitored descriptor set and assigned a session state. Received input advances that client's login state or is handled as a command.
+The server creates a TCP listening socket, binds it to its port, starts listening, and uses `select()` to monitor the listening socket and connected clients. New connections are added to the monitored descriptor set. Received input advances that client's login state or is handled as a command.
 
-See [architecture notes](docs/architecture.md) and the [server flow diagram](diagrams/server-flow.mmd).
+See [architecture notes](docs/architecture.md) and the [server flow diagram source](diagrams/server-flow.mmd).
 
-## Build and run
+## Source and build status
 
-The original lab source is included as `src/nsad.c` only if it is permitted to redistribute. If you have permission to publish your own source, compile it on a Linux system with GCC:
+This repository currently contains project documentation and diagram source; the original C source is not included yet. The lab implementation was developed from an existing example/template, so check the course's redistribution rules before publishing the source.
+
+After an approved and reviewed source file is added at `src/nsad.c`, the intended build command on Linux is:
 
 ```sh
 gcc -Wall -Wextra -o nsad src/nsad.c
 ./nsad
 ```
 
-In the lab version, the listening port is defined in the source as `14055`. Connect from a client on a reachable network using:
+In the lab version, the listening port is defined in the source as `14055`. A client can connect from an authorized machine using:
 
 ```sh
 nc <server-address> 14055
@@ -36,22 +38,23 @@ nc <server-address> 14055
 
 Use only on a system and network where you have permission to run a listening service. Do not expose this lab daemon to the public internet.
 
-## Tested lab behavior
+## Reported lab testing
 
-According to the lab notes, testing included a client login, command submissions such as `ls` and `whoami`, the `exit` command, and two simultaneous client sessions. These are reported lab results, not an independent test run of this repository.
+According to the lab summary, testing included a client login, command submissions such as `ls` and `whoami`, the `exit` command, and two simultaneous client sessions. These are reported lab results, not an independent test run of this repository.
 
 See [testing notes](docs/testing.md).
 
 ## Security limitations
 
-- The original implementation logs passwords in plaintext. Do not publish real logs or real credentials.
+- The uploaded lab implementation writes entered passwords to its log in plaintext. Do not publish the original log or any real credentials.
 - The login exchange is not encrypted and does not provide secure authentication.
 - This is an educational emulator; arbitrary commands are not executed.
-- The source should be reviewed for robustness before any use beyond a controlled lab.
+- The original implementation should be reviewed for robustness before any use beyond a controlled lab.
+- The client table is fixed-size and indexed by socket descriptor in the supplied implementation; this needs to be made safe before reusing the code.
 
 ## Project context
 
-This repository documents a university networking lab focused on TCP sockets, Linux process/network tools, and concurrent client handling. Lab handout materials or source code should only be committed when redistribution is permitted.
+This repository documents a university networking lab focused on TCP sockets, Linux process/network tools, and concurrent client handling. Lab handout materials or code should only be committed when redistribution is permitted.
 
 ## Skills demonstrated
 
