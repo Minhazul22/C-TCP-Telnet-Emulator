@@ -1,0 +1,20 @@
+flowchart TD
+    A([Start]) --> B[Create TCP socket]
+    B --> C[Bind and listen on port 14055]
+    C --> D[Wait with select()]
+    D --> E{Ready descriptor?}
+    E -->|Listener| F[accept client]
+    F --> G[Initialize client state]
+    G --> D
+    E -->|Client| H[recv input]
+    H --> I{Session state}
+    I -->|Username| J[Store username; ask password]
+    J --> D
+    I -->|Password| K[Log login event; show prompt]
+    K --> D
+    I -->|Logged in| L[Log command]
+    L --> M{Command = exit?}
+    M -->|Yes| N[Send Bye; close client]
+    M -->|No| O[Reply unknown command]
+    N --> D
+    O --> D
